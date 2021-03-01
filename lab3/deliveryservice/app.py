@@ -1,10 +1,12 @@
 from flask import Flask, request
 
+from db import Base, engine
 from resources.delivery import create_delivery, get_delivery, delete_delivery
 from resources.status import update_status
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+Base.metadata.create_all(engine)
 
 
 @app.route('/deliveries', methods=['POST'])
@@ -19,7 +21,8 @@ def get_delivery_api(d_id):
 
 
 @app.route('/deliveries/<d_id>/status', methods=['PUT'])
-def update_delivery_status_api(d_id, status):
+def update_delivery_status_api(d_id):
+    status = request.args.get('status')
     return update_status(d_id, status)
 
 
