@@ -13,4 +13,4 @@ EXPOSE 5000
 # Enviroment Variables
 ENV DB_URL  sqlite:///delivery.db
 # Run our App
-CMD ["python3","app_openapi.py"]
+CMD ["python3","app.py"]
