@@ -7,7 +7,6 @@ session = Session()
 
 deliveries = session.query(DeliveryDAO).all()
 
-# 4 - print deliveries' details
 print('\n### All deliveries:')
 for delivery in deliveries:
     print(f'{delivery.id} was created by {delivery.customer_id}. Its current status is {delivery.status.status}')
