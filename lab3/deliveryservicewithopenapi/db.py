@@ -11,6 +11,7 @@ else:
     db_url = 'sqlite:///delivery.db'
 
 engine = create_engine(db_url)
+# https://docs.sqlalchemy.org/en/13/orm/session.html
 Session = sessionmaker(bind=engine)
-
+# https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/api.html
 Base = declarative_base()
