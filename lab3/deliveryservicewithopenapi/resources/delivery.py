@@ -45,7 +45,7 @@ class Delivery:
             return jsonify(text_out), 200
         else:
             session.close()
-            return jsonify({'message': f'There is no delivery with id {d_id}'}), 200
+            return jsonify({'message': f'There is no delivery with id {d_id}'}), 404
 
     @staticmethod
     def delete(d_id):
