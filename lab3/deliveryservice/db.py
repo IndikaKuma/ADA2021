@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Saving model in a given location (provided as an env. variable
+# The database URL is provided as an env. variable
 if "DB_URL" is os.environ:
     db_url = os.environ['DB_URL']
 else:
