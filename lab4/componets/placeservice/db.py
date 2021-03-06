@@ -11,6 +11,7 @@ if 'DB_URL' is os.environ:
 else:
     db_url = 'sqlite:///delivery.db'
 print(os.environ['DB_URL'])
+print(db_url)
 engine = create_engine(db_url)
 # https://docs.sqlalchemy.org/en/13/orm/session.html
 Session = sessionmaker(bind=engine)
