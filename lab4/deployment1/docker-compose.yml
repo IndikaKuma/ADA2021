@@ -4,8 +4,8 @@ services:
     image: postgres:13.2
     restart: always
     environment:
-      - POSTGRES_USER: testuser
-      - POSTGRES_PASSWORD: testpass
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
     ports:
       - "5432:5432"
     volumes:
@@ -19,7 +19,7 @@ services:
     build:
       context: ./../componets/deliveryservice
     environment:
-      - DB_URL: postgres://testuser:testpass@pgdbserver:5432/delivery
+      - DB_URL=postgres://testuser:testpass@pgdbserver:5432/delivery
     depends_on:
       - pgdbserver
     ports:
@@ -28,7 +28,7 @@ services:
     build:
       context: ./../componets/placeservice
     environment:
-      - DB_URL: postgres://testuser:testpass@pgdbserver:5432/place
+      - DB_URL=postgres://testuser:testpass@pgdbserver:5432/place
     depends_on:
       - pgdbserver
     ports:
