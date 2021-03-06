@@ -4,3 +4,4 @@ numpy==1.19.1
 sqlalchemy==1.3.18
 # connexion
 connexion[swagger-ui]
+psycopg2
