@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  pgdbserver:
+    image: postgres:13.2
+    restart: always
+    environment:
+      - POSTGRES_USER: testuser
+      - POSTGRES_PASSWORD: testpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/indika_kuma/pgdata:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+  deliveryservice:
+    build:
+      context: ./../componets/deliveryservice
+    environment:
+      - DB_URL: postgres://testuser:testpass@pgdbserver:5432/delivery
+    depends_on:
+      - pgdbserver
+    ports:
+      - "5000:5000"
+  placeservice:
+    build:
+      context: ./../componets/placeservice
+    environment:
+      - DB_URL: postgres://testuser:testpass@pgdbserver:5432/place
+    depends_on:
+      - pgdbserver
+    ports:
+      - "5001:5000"
