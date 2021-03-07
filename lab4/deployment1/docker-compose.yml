@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  pgdbserver:
+  pgdb_server:
     image: postgres:13.2
     restart: always
     environment:
@@ -10,26 +10,26 @@ services:
       - "5432:5432"
     volumes:
       - /home/indika_kuma/pgdata:/var/lib/postgresql/data
-  dbadmin:
+  db_admin:
     image: adminer
     restart: always
     ports:
       - "8080:8080"
-  deliveryservice:
+  delivery_service:
     build:
       context: ./../componets/deliveryservice
     environment:
-      - DB_URL=postgresql://testuser:testpass@pgdbserver:5432/delivery
+      - DB_URL=postgresql://testuser:testpass@pgdb_server:5432/delivery
     depends_on:
-      - pgdbserver
+      - pgdb_server
     ports:
       - "5000:5000"
-  placeservice:
+  place_service:
     build:
       context: ./../componets/placeservice
     environment:
-      - DB_URL=postgresql://testuser:testpass@pgdbserver:5432/place
+      - DB_URL=postgresql://testuser:testpass@pgdb_server:5432/place
     depends_on:
-      - pgdbserver
+      - pgdb_server
     ports:
       - "5001:5000"
