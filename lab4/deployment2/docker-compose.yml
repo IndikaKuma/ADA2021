@@ -18,8 +18,7 @@ services:
     ports:
       - "8080:8080"
   delivery_service:
-    build:
-      context: ./../componets/deliveryservice
+    build: https://github.com/IndikaKuma/ADA2021.git#:/lab4/componets/deliveryservice
     container_name: delivery_service_ct
     environment:
       - DB_URL=postgresql://testuser:testpass@pgdb_server:5432/delivery
@@ -28,8 +27,7 @@ services:
     ports:
       - "5000:5000"
   place_service:
-    build:
-      context: ./../componets/placeservice
+    build: https://github.com/IndikaKuma/ADA2021.git#:/lab4/componets/placeservice
     container_name: place_service_ct
     environment:
       - DB_URL=postgresql://testuser:testpass@pgdb_server:5432/place
