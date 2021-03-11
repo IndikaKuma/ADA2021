@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  pgdb_server:
+    image: postgres:13.2
+    restart: always
+    environment:
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/indika_kuma/pgdata:/var/lib/postgresql/data
+  db_admin:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
