@@ -5,9 +5,9 @@ from flask import jsonify
 orderRecords = [
     {
         "id": "id1",
-        "product type": "Laptop",
+        "product_type": "Laptop",
         "quantity": 4000,
-        "unit price": 444.50
+        "unit_price": 444.50
     }
 ]
 
