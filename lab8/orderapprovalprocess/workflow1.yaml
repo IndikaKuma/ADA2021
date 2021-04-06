@@ -9,13 +9,53 @@
 main:
   params: [args]
   steps:
-    - CreateIvnURL:
+    - initGetInvURLVar:
         assign:
-          - IvnURL: ${"http://.....:5000/products/" + args.pName}
+          - GetInvURL: ${"http://{ipVM}:5000/products/" + args.pName}
     - checkInventory:
         call: http.get
         args:
-            url: ${IvnURL}
-        result: InventoryRes
-    - returnOutput:
-        return: ${InventoryRes.body.quantity}
+          url: ${GetInvURL}
+        result: GetInventoryRes
+    - conditionalOnInventory:
+        switch:
+          - condition: ${args.quantity >  GetInventoryRes.body.quantity}
+            next: rejectOrder
+        next: acceptOrder
+    - rejectOrder:
+        return: ${"Sorry, we cannot meet your order. The available quantity for the product " + args.pName + " is " +  GetInventoryRes.body.quantity}
+    - acceptOrder:
+        call: order_completion_subprocess
+        args:
+          pName: ${args.pName}
+          rQuantity: ${args.quantity}
+        result: output
+        next: return_message
+    - return_message:
+        return: ${output}
+
+order_completion_subprocess:
+  params: [pName, rQuantity]
+  steps:
+    - initUpdateInvURLVar:
+        assign:
+          - UpdateInvURL: ${"http://{ipVM}:5000/products/" + pName +"/quantity"}
+    - updateInventory:
+        call: http.request
+        args:
+          url: ${UpdateInvURL}
+          method: PUT
+          query:
+            value: ${rQuantity}
+        result: UpdateInventoryRes
+    - createOrder:
+        call: http.post
+        args:
+          url: http://{ipVM}:5001/orders/
+          body:
+            product_type: ${pName}
+            quantity: ${rQuantity}
+            unit_price: 444.50
+        result: CreateOrderRes
+    - return_order_complete_message:
+        return: ${"An Order was accepted with id " + CreateOrderRes.body.id}
