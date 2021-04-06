@@ -1,0 +1,21 @@
+# This is a sample workflow, feel free to replace it with your source code
+#
+# This workflow does the following:
+# - reads current time and date information from an external API and stores
+#   the response in CurrentDateTime variable
+# - retrieves a list of Wikipedia articles related to the day of the week
+#   from CurrentDateTime
+# - returns the list of articles as an output of the workflow
+main:
+  params: [args]
+  steps:
+    - CreateIvnURL:
+        assign:
+          - IvnURL: ${"http://.....:5000/products/" + args.pName}
+    - checkInventory:
+        call: http.get
+        args:
+            url: ${IvnURL}
+        result: InventoryRes
+    - returnOutput:
+        return: ${InventoryRes.body.quantity}
