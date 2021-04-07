@@ -1,17 +1,10 @@
-# This is a sample workflow, feel free to replace it with your source code
-#
-# This workflow does the following:
-# - reads current time and date information from an external API and stores
-#   the response in CurrentDateTime variable
-# - retrieves a list of Wikipedia articles related to the day of the week
-#   from CurrentDateTime
-# - returns the list of articles as an output of the workflow
+# Order Approval Process
 main:
   params: [args]
   steps:
     - initGetInvURLVar:
         assign:
-          - GetInvURL: ${"http://{ipVM}:5000/products/" + args.pName}
+          - GetInvURL: ${"http://Your_VM_IP:5000/products/" + args.pName}
     - checkInventory:
         call: http.get
         args:
@@ -20,26 +13,25 @@ main:
     - conditionalOnInventory:
         switch:
           - condition: ${args.quantity >  GetInventoryRes.body.quantity}
-            next: rejectOrder
+            steps:
+              - rejectOrder:
+                  return: ${"Sorry, we cannot meet your order. The available quantity for the product " + args.pName + " is " +  string(GetInventoryRes.body.quantity)}
         next: acceptOrder
-    - rejectOrder:
-        return: ${"Sorry, we cannot meet your order. The available quantity for the product " + args.pName + " is " +  GetInventoryRes.body.quantity}
     - acceptOrder:
-        call: order_completion_subprocess
+        call: accept_order_subprocess
         args:
           pName: ${args.pName}
           rQuantity: ${args.quantity}
         result: output
-        next: return_message
     - return_message:
         return: ${output}
 
-order_completion_subprocess:
+accept_order_subprocess:
   params: [pName, rQuantity]
   steps:
     - initUpdateInvURLVar:
         assign:
-          - UpdateInvURL: ${"http://{ipVM}:5000/products/" + pName +"/quantity"}
+          - UpdateInvURL: ${"http://Your_VM_IP:5000/products/" + pName +"/quantity"}
     - updateInventory:
         call: http.request
         args:
@@ -51,7 +43,7 @@ order_completion_subprocess:
     - createOrder:
         call: http.post
         args:
-          url: http://{ipVM}:5001/orders/
+          url: http://Your_VM_IP:5001/orders/
           body:
             product_type: ${pName}
             quantity: ${rQuantity}
