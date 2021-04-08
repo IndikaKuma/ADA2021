@@ -18,7 +18,7 @@ def predict():
     return dp.predict(request)
 
 
-@app.route('/diabetes_predictor', methods=['GET'])
+@app.route('/diabetes_predictor/str', methods=['POST'])
 def predict_str():
     return dp.predict_from_string(request.get_json()["input"])
 
