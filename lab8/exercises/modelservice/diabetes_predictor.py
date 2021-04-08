@@ -55,7 +55,7 @@ class DiabetesPredictor:
                 print("The file does not exist to be removed")
 
             parsed = json.loads(results.to_json(orient="records"))
-            return json.dumps(parsed, indent=4), 200
+            return jsonify(parsed), 200
 
     def predict_from_string(self, str):
         input = StringIO(str)
@@ -69,4 +69,4 @@ class DiabetesPredictor:
                                          'BMI', 'DiabetesPedigreeFunction', 'Age'])
         results['Outcome'] = y_pred
         parsed = json.loads(results.to_json(orient="records"))
-        return json.dumps(parsed, indent=4), 200
+        return jsonify(parsed), 200
