@@ -1,9 +1,15 @@
 from flask import Flask, request
 
-from resources.product import Product
+from resources.product import Product, Products
 
 app = Flask(__name__)
 product = Product()
+products = Products()
+
+
+@app.route('/products/', methods=['POST'])
+def create_products():
+    return products.post(request)
 
 
 @app.route('/products/<string:pname>', methods=['GET'])

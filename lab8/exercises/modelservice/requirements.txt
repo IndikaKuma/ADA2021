@@ -1,0 +1,7 @@
+flask
+pandas==1.0.5
+keras==2.4.0
+numpy~=1.19.0
+h5py~=2.10.0
+six>=1.11.0
+google-cloud-storage
