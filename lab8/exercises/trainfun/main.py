@@ -2,6 +2,7 @@ import logging
 import os
 
 import numpy
+from flask import jsonify
 from google.cloud import storage
 from keras.layers import Dense
 from keras.models import Sequential
@@ -52,3 +53,4 @@ def train_diabetes_predictor(request):
     os.remove(temp_filename)
     os.remove(model_path)
     logging.info("Saved the model to GCP bucket")
+    return jsonify({"message": "Saved the model to GCP bucket"}), 200

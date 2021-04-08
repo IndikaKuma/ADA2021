@@ -60,6 +60,7 @@ class DiabetesPredictor:
     def predict_from_string(self, str):
         input = StringIO(str)
         df = numpy.fromstring(str, sep=",")
+        df = numpy.reshape(df, (1, -1))
         df = df[:, 0:8]
         y_pred = self.model.predict(df)
         y_pred = (y_pred > 0.5)
