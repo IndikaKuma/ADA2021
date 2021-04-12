@@ -39,7 +39,7 @@
       ],
       "extra_config": {
         "github.com/devopsfaith/krakend-ratelimit/juju/router": {
-          "maxRate": 1,
+          "maxRate": 3,
           "clientMaxRate": 0,
           "strategy": "ip"
         }
