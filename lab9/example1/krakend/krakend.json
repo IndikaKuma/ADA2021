@@ -19,7 +19,7 @@
           "disable_host_sanitize": false
         },
         {
-          "url_pattern": "/products/{producttype}/",
+          "url_pattern": "/products/{producttype}",
           "encoding": "json",
           "method": "GET",
           "host": [
