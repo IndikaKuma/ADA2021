@@ -14,12 +14,12 @@
           "encoding": "json",
           "method": "GET",
           "host": [
-            "http://order_record_service_ct:5001/"
+            "http://order_record_service_ct:5000/"
           ],
           "disable_host_sanitize": false
         },
         {
-          "url_pattern": "/products/{producttype}/quantity",
+          "url_pattern": "/products/{producttype}/",
           "encoding": "json",
           "method": "GET",
           "host": [
@@ -44,7 +44,7 @@
           "encoding": "json",
           "method": "GET",
           "host": [
-            "http://order_record_service_ct:5001/"
+            "http://order_record_service_ct:5000/"
           ],
           "disable_host_sanitize": false,
           "mapping": {
