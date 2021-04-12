@@ -70,7 +70,7 @@
             "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
               "interval": 60,
               "name": "circuit-breaker-1",
-              "timeout": 20,
+              "timeout": 40,
               "maxErrors": 1,
               "logStatusChange": true
             }
