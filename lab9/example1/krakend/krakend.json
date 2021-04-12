@@ -52,7 +52,7 @@
           }
         },
         {
-          "url_pattern": "/products/{resp0_type}/quantity",
+          "url_pattern": "/products/{resp0_type}",
           "encoding": "json",
           "method": "GET",
           "host": [
