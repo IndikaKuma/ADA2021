@@ -48,7 +48,7 @@
           ],
           "disable_host_sanitize": false,
           "mapping": {
-            "product type": "type"
+            "product_type": "type"
           }
         },
         {
