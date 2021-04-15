@@ -12,7 +12,7 @@ def create_products():
     return products.post(request)
 
 
-@app.route('/qproducts/', methods=['POST'])
+@app.route('/qproducts', methods=['POST'])
 def create_products_from_query():
     return products.post(request)
 
