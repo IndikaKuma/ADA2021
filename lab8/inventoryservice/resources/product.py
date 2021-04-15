@@ -36,3 +36,13 @@ class Products:
                 return jsonify({"message": "There is a product with the name " + pname}), 400
         inventories.append(record_to_be_created)
         return jsonify(record_to_be_created), 201
+
+    def post_query(self, request):
+        pname = request.args.get('name')
+        quantity = request.args.get('quantity')
+        for record in inventories:
+            if pname == record["name"]:
+                return jsonify({"message": "There is a product with the name " + pname}), 400
+        record_to_be_created = jsonify({"name": pname, "quantity": quantity})
+        inventories.append(record_to_be_created)
+        return record_to_be_created, 201
