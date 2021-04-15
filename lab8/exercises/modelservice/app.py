@@ -18,9 +18,14 @@ def predict():
     return dp.predict(request)
 
 
-@app.route('/diabetes_predictor/str', methods=['POST'])
+@app.route('/diabetes_predictor/str', methods=['POST', 'GET'])
 def predict_str():
     return dp.predict_from_string(request.get_json()["input"])
+
+
+@app.route('/diabetes_predictor/qstr', methods=['GET'])
+def predict_strarg():
+    return dp.predict_from_string(request.args.get("input"))
 
 
 dp = DiabetesPredictor()

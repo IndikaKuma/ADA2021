@@ -58,13 +58,15 @@ class DiabetesPredictor:
             return jsonify(parsed), 200
 
     def predict_from_string(self, str):
-        input = StringIO(str)
+        if self.model is None:
+            self.model = load_model('model.h5')
+        input2 = StringIO(str)
         df = numpy.fromstring(str, sep=",")
         df = numpy.reshape(df, (1, -1))
         df = df[:, 0:8]
         y_pred = self.model.predict(df)
         y_pred = (y_pred > 0.5)
-        results = pandas.read_csv(input,
+        results = pandas.read_csv(input2,
                                   names=['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
                                          'BMI', 'DiabetesPedigreeFunction', 'Age'])
         results['Outcome'] = y_pred
