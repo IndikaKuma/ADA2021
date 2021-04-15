@@ -14,7 +14,7 @@ def create_products():
 
 @app.route('/qproducts', methods=['POST'])
 def create_products_from_query():
-    return products.post(request)
+    return products.post_query(request)
 
 
 @app.route('/products/<string:pname>', methods=['GET'])
