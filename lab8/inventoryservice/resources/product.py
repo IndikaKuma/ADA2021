@@ -43,6 +43,6 @@ class Products:
         for record in inventories:
             if pname == record["name"]:
                 return jsonify({"message": "There is a product with the name " + pname}), 400
-        record_to_be_created = jsonify({"name": pname, "quantity": quantity})
+        record_to_be_created = {"name": pname, "quantity": quantity}
         inventories.append(record_to_be_created)
-        return record_to_be_created, 201
+        return jsonify(record_to_be_created), 201
