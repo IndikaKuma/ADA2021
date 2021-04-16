@@ -11,7 +11,7 @@
       "querystring_params": [
         "input"
       ],
-      "timeout": "20000ms",
+      "timeout": "200000ms",
       "backend": [
         {
           "url_pattern": "/diabetes_predictor/qstr",
