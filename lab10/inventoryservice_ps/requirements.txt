@@ -1,0 +1,2 @@
+flask
+google-cloud-pubsub==2.0.0
