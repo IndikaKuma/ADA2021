@@ -22,12 +22,12 @@ def create_products_from_query():
 
 
 @app.route('/products/<string:pname>', methods=['GET'])
-def get_order(pname):
+def get_product_stock(pname):
     return product.get(pname)
 
 
 @app.route('/products/<string:pname>/quantity', methods=['PUT'])
-def update_order(pname):
+def update_product_stock(pname):
     return product.put(pname, int(request.args.get('value')))
 
 
