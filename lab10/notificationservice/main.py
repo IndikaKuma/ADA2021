@@ -16,7 +16,7 @@ def receive_order_status(event, context):
            metadata. The `event_id` field contains the Pub/Sub message ID. The
            `timestamp` field contains the publish time.
       """
-
+    logging.basicConfig(level=logging.INFO)
     logging.info("""This Function was triggered by messageId {} published at {}
         """.format(context.event_id, context.timestamp))
     project_id = os.environ.get('PROJET_ID', 'Specified environment variable is not set.')
