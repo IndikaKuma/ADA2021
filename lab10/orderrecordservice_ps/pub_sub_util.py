@@ -34,15 +34,15 @@ def create_topic(project, topic):
         logging.info(ex)
 
 
-def publish_message(project, topic, message, event):
+def publish_message(project, topic, message, event_type):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project, topic)
-    future = publisher.publish(topic_path, message, eventtype=event)
+    future = publisher.publish(topic_path, message, event_type=event_type)
     try:
         future.result()
     except Exception as ex:
         logging.info(ex)
-    print(f"Published messages to {topic_path}.")
+    print(f"Published event {event_type} to {topic_path}.")
 
 
 def create_subscription(project, topic, subscription):

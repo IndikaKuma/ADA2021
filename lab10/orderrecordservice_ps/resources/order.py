@@ -49,6 +49,16 @@ class Orders:
         orderRecords.append(record_to_be_created)
         return jsonify(record_to_be_created), 201
 
+    def create_order(self, data):
+        record_to_be_created = data
+        id1 = "id" + str(random.randint(1, 100001))
+        record_to_be_created["id"] = id1
+        for record in orderRecords:
+            if id1 == record["id"]:
+                return {"message": "Order with id {} already exists".format(id)}
+        orderRecords.append(record_to_be_created)
+        return record_to_be_created
+
     def put(self, request):
         record_to_be_created = request.get_json(force=True)
         id = record_to_be_created['id']
