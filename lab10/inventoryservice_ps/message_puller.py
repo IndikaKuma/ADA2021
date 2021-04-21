@@ -15,17 +15,16 @@ def pull_message(project, subscription, product):
     def callback(message):
         logging.info(f"Received {message.data}.")
         data = json.loads(message.data.decode("utf-8"))
-        quantity = product.get_quantity(data["product_type"])
-        if quantity > data["quantity"]:
+        quantityAva = product.get_quantity(data["product_type"])
+        if quantityAva < data["quantity"]:
             data = {
-                "message": "The requested quantity can be satisfied"
+                "message": "The requested quantity cannot be satisfied"
             }
             data = json.dumps(data).encode("utf-8")
-            publish_message(project=project, topic="inventory_status", message=data, event_type="StockAvailable")
-            logging.info("Publish the event StockAvailable")
+            publish_message(project=project, topic="inventory_status", message=data, event_type="StockUnavailable")
         else:
             data = json.dumps(data).encode("utf-8")
-            publish_message(project=project, topic="inventory_status", message=data, event_type="StockUnavailable")
+            publish_message(project=project, topic="inventory_status", message=data, event_type="StockAvailable")
         message.ack()
 
     streaming_pull_future = subscriber.subscribe(
