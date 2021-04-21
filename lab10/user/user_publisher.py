@@ -24,7 +24,7 @@ def publish_message(project_id, topic_id, message):
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
-    create_topic("ada2020-305519", "order_req")
+    # create_topic("ada2020-305519", "order_req")
     data = {
         "product type": "Laptop",
         "quantity": 1,

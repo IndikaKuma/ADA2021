@@ -5,21 +5,32 @@ from threading import Thread
 from google.cloud import pubsub_v1
 
 
-def callback(message):
-    print("Received message:", message.data)
-    message.ack()
+def pull_message(project, subscription, timeout=5.0):
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(project, subscription)
 
+    def callback(message):
+        print(f"Received {message.data}.")
+        time.sleep(timeout + 5.0)  # Process longer than streaming pull future timeout.
+        message.ack()
+        print(f"Done processing the message {message.data}.")
 
-def pull_message(project, subscription):
+    streaming_pull_future = subscriber.subscribe(
+        subscription_path, callback=callback, await_callbacks_on_shutdown=True,
+    )
+    print(f"Listening for messages on {subscription_path}..\n")
 
-    with pubsub_v1.SubscriberClient() as subscriber:
-        subscription_path = subscriber.subscription_path(project, subscription)
-        future = subscriber.subscribe(subscription_path, callback)
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
         try:
-            future.result(timeout=10000)
-        except Exception as ex:
-            logging.info(ex)
-            future.cancel()
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
+            streaming_pull_future.result(timeout=timeout)
+        except TimeoutError:
+            streaming_pull_future.cancel()
+            print("Streaming pull future canceled.")
+            streaming_pull_future.result()  # Blocks until shutdown complete.
+            print("Done waiting for the stream shutdown.")
 
 
 def create_subscription(project_id, topic_id, subscription_id):
@@ -34,6 +45,7 @@ def create_subscription(project_id, topic_id, subscription_id):
             )
         print(f"Subscription created: {subscription}")
     except Exception as ex:
+        logging.info("create_subscription")
         logging.info(ex)
 
 
@@ -51,7 +63,6 @@ class MessagePuller(Thread):
     def run(self):
         while True:
             try:
-                print("*** Before Pull***")
                 pull_message(self.project_id, self.subscription_id)
                 time.sleep(30)
             except Exception as ex:
