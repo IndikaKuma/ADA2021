@@ -26,9 +26,7 @@ def pull_message(project, subscription, product):
         else:
             data = json.dumps(data).encode("utf-8")
             publish_message(project=project, topic="inventory_status", message=data, event_type="StockUnavailable")
-            logging.info("Publish the event StockUnavailable")
         message.ack()
-        logging.info(f"Done processing the message {data}.")
 
     streaming_pull_future = subscriber.subscribe(
         subscription_path, callback=callback, await_callbacks_on_shutdown=True,
@@ -58,7 +56,6 @@ class MessagePuller(Thread):
     def run(self):
         while True:
             try:
-                print("Pulling Messages")
                 pull_message(self.project_id, self.subscription_id, self.product)
                 time.sleep(30)
             except Exception as ex:

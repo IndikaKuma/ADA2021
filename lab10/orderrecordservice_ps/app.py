@@ -18,7 +18,7 @@ endpoint = service_uri + "orders_ps/"
 create_subscription(project=project_id, topic="inventory_status",
                     subscription="inventory_status_orderrecord_sub")
 create_topic(project=project_id, topic="order_status")
-MessagePuller(project=project_id, subscription="order_req_sub", orders=orders)
+MessagePuller(project=project_id, subscription="inventory_status_orderrecord_sub", orders=orders)
 
 
 @app.route("/orders_ps/", methods=["POST"])

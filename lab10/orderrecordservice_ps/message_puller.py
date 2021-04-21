@@ -21,7 +21,6 @@ def pull_message(project, subscription, orders):
             results = orders.create_order(data)
             results = json.dumps(results).encode("utf-8")
             publish_message(project=project, topic="order_status", message=results, event_type="OrderCreated")
-            logging.info("The event StockAvailable received")
         message.ack()
 
     streaming_pull_future = subscriber.subscribe(
