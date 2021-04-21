@@ -8,27 +8,34 @@ from google.cloud import pubsub_v1
 from pub_sub_util import publish_message
 
 
-def pull_message(project, subscription, product):
-    subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project, subscription)
+class Callable:
+    def __init__(self, project, product):
+        self.project = project
+        self.product = product
 
-    def callback(message):
+    def callback(self, message):
         logging.info(f"Received {message.data}.")
         data = json.loads(message.data.decode("utf-8"))
-        quantityAva = product.get_quantity(data["product_type"])
+        quantityAva = self.product.get_quantity(data["product_type"])
         if quantityAva < data["quantity"]:
             data = {
                 "message": "The requested quantity cannot be satisfied"
             }
             data = json.dumps(data).encode("utf-8")
-            publish_message(project=project, topic="inventory_status", message=data, event_type="StockUnavailable")
+            publish_message(project=self.project, topic="inventory_status", message=data, event_type="StockUnavailable")
         else:
             data = json.dumps(data).encode("utf-8")
-            publish_message(project=project, topic="inventory_status", message=data, event_type="StockAvailable")
+            publish_message(project=self.project, topic="inventory_status", message=data, event_type="StockAvailable")
         message.ack()
 
+
+def pull_message(project, subscription, product):
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(project, subscription)
+
     streaming_pull_future = subscriber.subscribe(
-        subscription_path, callback=callback, await_callbacks_on_shutdown=True,
+        subscription_path, callback=Callable(product=product, project=project).callback,
+        await_callbacks_on_shutdown=True,
     )
     logging.info(f"Listening for messages on {subscription_path}..\n")
 
