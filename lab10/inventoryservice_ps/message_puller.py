@@ -5,13 +5,12 @@ from threading import Thread
 from google.cloud import pubsub_v1
 
 
-def pull_message(project, subscription, timeout=5.0):
+def pull_message(project, subscription, timeout=10000):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription)
 
     def callback(message):
         print(f"Received {message.data}.")
-        time.sleep(timeout + 5.0)  # Process longer than streaming pull future timeout.
         message.ack()
         print(f"Done processing the message {message.data}.")
 
@@ -29,8 +28,6 @@ def pull_message(project, subscription, timeout=5.0):
         except TimeoutError:
             streaming_pull_future.cancel()
             print("Streaming pull future canceled.")
-            streaming_pull_future.result()  # Blocks until shutdown complete.
-            print("Done waiting for the stream shutdown.")
 
 
 def create_subscription(project_id, topic_id, subscription_id):
