@@ -14,7 +14,7 @@ def pull_message(project, subscription, product):
 
     def callback(message):
         logging.info(f"Received {message.data}.")
-        data = json.dumps(message.data.decode("utf-8"))
+        data = json.load(message.data.decode("utf-8"))
         quantity = product.get_quantity(data["product_type"])
         if quantity > data["quantity"]:
             data = {
