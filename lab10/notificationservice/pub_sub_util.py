@@ -31,9 +31,9 @@ def create_subscription(project, topic, subscription):
         topic_path = publisher.topic_path(project, topic)
         subscription_path = subscriber.subscription_path(project, subscription)
         with subscriber:
-            subscription = subscriber.create_subscription(
+            subscription_en = subscriber.create_subscription(
                 request={"name": subscription_path, "topic": topic_path}
             )
-        logging.info(f"Subscription created: {subscription}")
+        logging.info(f"Subscription created: {subscription_en}")
     except Exception as ex:
         logging.info(f"Error creating subscription {subscription} , the exception: {ex}.")

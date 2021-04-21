@@ -14,8 +14,7 @@ services:
       context: ./orderrecordservice_ps
     container_name: orderrecordservice_ps_ct
     environment:
-      - project_id=ada2020-305519
-      - service_uri=http://35.222.174.183:5001/      
+      - project_id=ada2020-305519    
     ports:
       - "5001:5000"
       

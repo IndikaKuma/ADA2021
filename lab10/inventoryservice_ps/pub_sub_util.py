@@ -37,6 +37,7 @@ def create_topic(project, topic):
 def publish_message(project, topic, message, event_type):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project, topic)
+    # event_type is a custom message attribute or meta-data. We can use our own meta-data.
     future = publisher.publish(topic_path, message, event_type=event_type)
     try:
         future.result()
@@ -52,9 +53,9 @@ def create_subscription(project, topic, subscription):
         topic_path = publisher.topic_path(project, topic)
         subscription_path = subscriber.subscription_path(project, subscription)
         with subscriber:
-            subscription = subscriber.create_subscription(
+            subscription_en = subscriber.create_subscription(
                 request={"name": subscription_path, "topic": topic_path}
             )
-        logging.info(f"Subscription created: {subscription}")
+        logging.info(f"Subscription created: {subscription_en}")
     except Exception as ex:
         logging.info(f"Error creating subscription {subscription} , the exception: {ex}.")

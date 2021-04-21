@@ -18,7 +18,7 @@ def create_subscription(project_id, topic_id, subscription_id):
             )
         logging.info(f"Subscription created: {subscription}")
     except Exception as ex:
-        logging.info(f"Error creating subscription {subscription} , the exception: {ex}.")
+        logging.info(f"Error creating subscription {subscription_id} , the exception: {ex}.")
         logging.info(ex)
 
 
