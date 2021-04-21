@@ -30,8 +30,7 @@ if __name__ == '__main__':
     create_topic("ada2020-305519", "order_req")
     data = {
         "product_type": "Laptop",
-        "quantity": 10
-        ,
+        "quantity": 10,
         "unit_price": 232.00
     }
     data = json.dumps(data).encode("utf-8")
