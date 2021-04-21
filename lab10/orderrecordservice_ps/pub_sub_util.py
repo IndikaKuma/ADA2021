@@ -42,7 +42,7 @@ def publish_message(project, topic, message, event_type):
         future.result()
     except Exception as ex:
         logging.info(ex)
-    print(f"Published event {event_type} to {topic_path}.")
+    logging.info(f"Published event {event_type} to {topic_path}.")
 
 
 def create_subscription(project, topic, subscription):

@@ -38,7 +38,7 @@ def pull_message(project, subscription):
 
 
 def callback(message):
-    print(f"Received {message}.")
+    logging.info(f"Received {message}.")
     message.ack()
 
 
