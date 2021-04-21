@@ -56,7 +56,6 @@ class MessagePuller(Thread):
         self.subscription_id = subscription
         self.daemon = True
         self.product = product
-        logging.basicConfig(level=logging.INFO)
         self.start()
 
     def run(self):

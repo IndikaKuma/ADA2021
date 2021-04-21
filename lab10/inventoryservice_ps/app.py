@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask, request
@@ -6,6 +7,7 @@ from message_puller import MessagePuller
 from pub_sub_util import create_subscription, create_topic
 from resources.product import Product, Products
 
+logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 product = Product()
 products = Products()
