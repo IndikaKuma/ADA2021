@@ -13,6 +13,11 @@ inventories = [
 
 
 class Product:
+    def get_quantity(self, pname):
+        for record in inventories:
+            if pname == record["name"]:
+                return record["quantity"]
+
     def get(self, pname):
         for record in inventories:
             if pname == record["name"]:

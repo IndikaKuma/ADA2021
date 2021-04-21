@@ -14,9 +14,9 @@ def create_subscription(project_id, topic_id, subscription_id):
             subscription = subscriber.create_subscription(
                 request={"name": subscription_path, "topic": topic_path}
             )
-        print(f"Subscription created: {subscription}")
+        logging.info(f"Subscription created: {subscription}")
     except Exception as ex:
-        logging.info("create_subscription")
+        logging.info(f"Error creating subscription {subscription} , the exception: {ex}.")
         logging.info(ex)
 
 
@@ -31,7 +31,7 @@ def pull_message(project, subscription):
         try:
             future.result()
         except Exception as ex:
-            logging.info(ex)
+            logging.info(f"Listening for messages on {subscription_name} threw an exception: {ex}.")
             time.sleep(30)
 
 
@@ -42,6 +42,5 @@ def callback(message):
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
-    # create_subscription("ada2020-305519", "order_status_user", "order_status_user_sub")
-    create_subscription("ada2020-305519", "order_req", "order_req_sub_user")
-    pull_message("ada2020-305519", "order_req_sub_user")
+    create_subscription("ada2020-305519", "order_status_user", "order_status_user_sub")
+    pull_message("ada2020-305519", "order_status_user_sub")

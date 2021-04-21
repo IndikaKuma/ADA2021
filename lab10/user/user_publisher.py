@@ -26,7 +26,7 @@ if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
     # create_topic("ada2020-305519", "order_req")
     data = {
-        "product type": "Laptop",
+        "product_type": "Laptop",
         "quantity": 1,
         "unit_price": 232.00
     }

@@ -1,19 +1,37 @@
+import json
 import logging
 import time
 from threading import Thread
 
 from google.cloud import pubsub_v1
 
+from pub_sub_util import publish_message
 
-def pull_message(project, subscription, timeout=30):
+
+def pull_message(project, subscription, product):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription)
 
     def callback(message):
         logging.info(f"Received {message.data}.")
-        # time.sleep(timeout + 30)
+        data = json.dumps(message.data.decode("utf-8"))
+        quantity = product.get_quantity(data["product_type"])
+        if quantity > data["quantity"]:
+            data = {
+                "message": "The requested quantity can be satisfied"
+            }
+            data = json.dumps(data).encode("utf-8")
+            publish_message(project=project, topic="inventory_status", message=data, event="StockAvailable")
+            logging.info("StockAvailable")
+        else:
+            data = {
+                "message": "The requested quantity cannot be satisfied"
+            }
+            data = json.dumps(data).encode("utf-8")
+            publish_message(project=project, topic="inventory_status", message=data, event="StockUnavailable")
+            logging.info("StockUnavailable")
         message.ack()
-        logging.info(f"Done processing the message {message.data}.")
+        logging.info(f"Done processing the message {data}.")
 
     streaming_pull_future = subscriber.subscribe(
         subscription_path, callback=callback, await_callbacks_on_shutdown=True,
@@ -25,44 +43,27 @@ def pull_message(project, subscription, timeout=30):
         try:
             # When `timeout` is not set, result() will block indefinitely,
             # unless an exception is encountered first.
-            streaming_pull_future.result(timeout=timeout)
+            streaming_pull_future.result(timeout=60)
         except TimeoutError:
             streaming_pull_future.cancel()
             logging.info("Streaming pull future canceled.")
 
 
-def create_subscription(project_id, topic_id, subscription_id):
-    try:
-        publisher = pubsub_v1.PublisherClient()
-        subscriber = pubsub_v1.SubscriberClient()
-        topic_path = publisher.topic_path(project_id, topic_id)
-        subscription_path = subscriber.subscription_path(project_id, subscription_id)
-        with subscriber:
-            subscription = subscriber.create_subscription(
-                request={"name": subscription_path, "topic": topic_path}
-            )
-        logging.info(f"Subscription created: {subscription}")
-    except Exception as ex:
-        logging.info("create_subscription")
-        logging.info(ex)
-
-
 class MessagePuller(Thread):
-    def __init__(self, project, topic, subscription):
+    def __init__(self, project, subscription, product):
         Thread.__init__(self)
         self.project_id = project
         self.subscription_id = subscription
         self.daemon = True
-        self.topic = topic
+        self.product = product
         logging.basicConfig(level=logging.INFO)
-        create_subscription(project, topic, subscription)
         self.start()
 
     def run(self):
         while True:
             try:
-                pull_message(self.project_id, self.subscription_id)
+                pull_message(self.project_id, self.subscription_id, self.product)
                 time.sleep(30)
             except Exception as ex:
-                logging.info(ex)
+                logging.info(f"Listening for messages on {self.subscription_id} threw an exception: {ex}.")
                 time.sleep(30)
