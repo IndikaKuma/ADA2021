@@ -5,7 +5,7 @@ from threading import Thread
 from google.cloud import pubsub_v1
 
 
-def pull_message(project, subscription, timeout=10000):
+def pull_message(project, subscription, timeout=30):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription)
 
