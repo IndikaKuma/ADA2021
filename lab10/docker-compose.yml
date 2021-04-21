@@ -8,3 +8,14 @@ services:
       - project_id=ada2020-305519
     ports:
       - "5000:5000"
+      
+  orderrecordservice_ps:
+    build:
+      context: ./orderrecordservice_ps
+    container_name: orderrecordservice_ps_ct
+    environment:
+      - project_id=ada2020-305519
+    ports:
+      - "5001:5000"
+      
+      
