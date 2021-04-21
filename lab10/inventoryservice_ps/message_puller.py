@@ -10,14 +10,15 @@ def pull_message(project, subscription, timeout=30):
     subscription_path = subscriber.subscription_path(project, subscription)
 
     def callback(message):
-        print(f"Received {message.data}.")
+        logging.info(f"Received {message.data}.")
+        # time.sleep(timeout + 30)
         message.ack()
-        print(f"Done processing the message {message.data}.")
+        logging.info(f"Done processing the message {message.data}.")
 
     streaming_pull_future = subscriber.subscribe(
         subscription_path, callback=callback, await_callbacks_on_shutdown=True,
     )
-    print(f"Listening for messages on {subscription_path}..\n")
+    logging.info(f"Listening for messages on {subscription_path}..\n")
 
     # Wrap subscriber in a 'with' block to automatically call close() when done.
     with subscriber:
@@ -27,7 +28,7 @@ def pull_message(project, subscription, timeout=30):
             streaming_pull_future.result(timeout=timeout)
         except TimeoutError:
             streaming_pull_future.cancel()
-            print("Streaming pull future canceled.")
+            logging.info("Streaming pull future canceled.")
 
 
 def create_subscription(project_id, topic_id, subscription_id):
@@ -40,7 +41,7 @@ def create_subscription(project_id, topic_id, subscription_id):
             subscription = subscriber.create_subscription(
                 request={"name": subscription_path, "topic": topic_path}
             )
-        print(f"Subscription created: {subscription}")
+        logging.info(f"Subscription created: {subscription}")
     except Exception as ex:
         logging.info("create_subscription")
         logging.info(ex)
