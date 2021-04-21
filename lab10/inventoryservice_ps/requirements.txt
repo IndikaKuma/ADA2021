@@ -1,2 +1,2 @@
 flask
-google-cloud-pubsub==2.0.0
+google-cloud-pubsub==2.4.1

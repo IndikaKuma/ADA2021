@@ -10,26 +10,16 @@ def callback(message):
     message.ack()
 
 
-def pull_message(project, topic, subscription):
-    topic_name = 'projects/{project_id}/topics/{topic}'.format(
-        project_id=project,
-        topic=topic
-    )
-
-    subscription_name = 'projects/{project_id}/subscriptions/{sub}'.format(
-        project_id=project,
-        sub=subscription
-    )
+def pull_message(project, subscription):
 
     with pubsub_v1.SubscriberClient() as subscriber:
-        subscriber.create_subscription(
-            name=subscription_name, topic=topic_name)
-        future = subscriber.subscribe(subscription_name, callback)
+        subscription_path = subscriber.subscription_path(project, subscription)
+        future = subscriber.subscribe(subscription_path, callback)
         try:
-            future.result()
+            future.result(timeout=10000)
         except Exception as ex:
             logging.info(ex)
-            time.sleep(30)
+            future.cancel()
 
 
 def create_subscription(project_id, topic_id, subscription_id):
@@ -39,7 +29,9 @@ def create_subscription(project_id, topic_id, subscription_id):
         topic_path = publisher.topic_path(project_id, topic_id)
         subscription_path = subscriber.subscription_path(project_id, subscription_id)
         with subscriber:
-            subscription = subscriber.create_subscription(subscription_path, topic_path)
+            subscription = subscriber.create_subscription(
+                request={"name": subscription_path, "topic": topic_path}
+            )
         print(f"Subscription created: {subscription}")
     except Exception as ex:
         logging.info(ex)
@@ -59,7 +51,9 @@ class MessagePuller(Thread):
     def run(self):
         while True:
             try:
-                pull_message(self.project_id, self.topic, self.subscription_id)
+                print("*** Before Pull***")
+                pull_message(self.project_id, self.subscription_id)
+                time.sleep(30)
             except Exception as ex:
                 logging.info(ex)
                 time.sleep(30)
