@@ -1,9 +1,10 @@
+import base64
 import logging
 import os
 
 from flask import Flask, request
 
-from pub_sub_util import create_subscription, create_topic
+from pub_sub_util import create_topic, create_push_subscription
 from resources.order import Order, Orders
 
 app = Flask(__name__)
@@ -11,8 +12,36 @@ logging.basicConfig(level=logging.INFO)
 orders = Orders()
 placeRecord = Order()
 project_id = os.environ['project_id']
-create_subscription(project=project_id, topic="inventory_status", subscription="inventory_status_orderrecord_sub")
+service_uri = os.environ['service_uri']
+endpoint = service_uri + "orders_ps/"
+create_push_subscription(project=project_id, topic="inventory_status",
+                         subscription="inventory_status_orderrecord_sub", endpoint=endpoint)
 create_topic(project=project_id, topic="order_status")
+
+
+@app.route("/orders_ps/", methods=["POST"])
+def index():
+    envelope = request.get_json()
+
+    if not envelope:
+        msg = "no Pub/Sub message received"
+        print(f"error: {msg}")
+        return f"Bad Request: {msg}", 400
+
+    if not isinstance(envelope, dict) or "message" not in envelope:
+        msg = "invalid Pub/Sub message format"
+        print(f"error: {msg}")
+        return f"Bad Request: {msg}", 400
+
+    pubsub_message = envelope["message"]
+    print(f"Hello {pubsub_message}!")
+    name = "World"
+    if isinstance(pubsub_message, dict) and "data" in pubsub_message:
+        name = base64.b64decode(pubsub_message["data"]).decode("utf-8").strip()
+
+    print(f"Hello {name}!")
+
+    return "", 204
 
 
 @app.route('/orders/<string:id>', methods=['GET'])

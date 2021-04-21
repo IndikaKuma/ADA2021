@@ -3,6 +3,27 @@ import logging
 from google.cloud import pubsub_v1
 
 
+def create_push_subscription(project, topic, subscription, endpoint):
+    publisher = pubsub_v1.PublisherClient()
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = publisher.topic_path(project, topic)
+    subscription_path = subscriber.subscription_path(project, subscription)
+
+    push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
+
+    with subscriber:
+        subscription = subscriber.create_subscription(
+            request={
+                "name": subscription_path,
+                "topic": topic_path,
+                "push_config": push_config,
+            }
+        )
+
+    logging.info(f"Push subscription created: {subscription}.")
+    logging.info(f"Endpoint for subscription is: {endpoint}")
+
+
 def create_topic(project, topic):
     try:
         publisher = pubsub_v1.PublisherClient()
