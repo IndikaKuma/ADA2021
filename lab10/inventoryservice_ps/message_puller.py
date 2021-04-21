@@ -62,6 +62,7 @@ class MessagePuller(Thread):
     def run(self):
         while True:
             try:
+                print("Pulling Messages")
                 pull_message(self.project_id, self.subscription_id, self.product)
                 time.sleep(30)
             except Exception as ex:

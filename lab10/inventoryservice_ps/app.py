@@ -12,7 +12,7 @@ products = Products()
 project_id = os.environ['project_id']
 create_subscription(project=project_id, topic="order_req", subscription="order_req_sub")
 create_topic(project=project_id, topic="inventory_status")
-MessagePuller(project=os.environ['project_id'], subscription="order_req_sub", product=product)
+MessagePuller(project=project_id, subscription="order_req_sub", product=product)
 
 
 @app.route('/products/', methods=['POST'])
