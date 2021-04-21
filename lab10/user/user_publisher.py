@@ -4,6 +4,7 @@ import logging
 from google.cloud import pubsub_v1
 
 
+
 def create_topic(project_id, topic_id):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, topic_id)
@@ -27,7 +28,8 @@ if __name__ == '__main__':
     # create_topic("ada2020-305519", "order_req")
     data = {
         "product_type": "Laptop",
-        "quantity": 1,
+        "quantity": 10
+        ,
         "unit_price": 232.00
     }
     data = json.dumps(data).encode("utf-8")
