@@ -1,0 +1,1 @@
+Using publisher/subscribe as backends  https://www.krakend.io/docs/backends/pubsub/
