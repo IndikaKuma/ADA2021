@@ -42,6 +42,7 @@ def publish_message(project, topic, message, event_type):
     try:
         future.result()
     except Exception as ex:
+        future.cancel()
         logging.info(ex)
     logging.info(f"Published event {event_type} to {topic_path}.")
 
