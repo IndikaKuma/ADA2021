@@ -6,8 +6,8 @@ services:
     volumes:
       - ./krakend:/etc/krakend/
     depends_on:
-      - inventory_service_ps
-      - order_record_service_ps
+      - inventoryservice_ps
+      - orderrecordservice_ps
     ports:
       - "8080:8081"
   inventoryservice_ps:
