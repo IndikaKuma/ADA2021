@@ -1,1 +1,55 @@
-Here, answer
+{
+  "version": 2,
+  "output_encoding": "json",
+  "name": "OrderApprovalAPI",
+  "port": 8081,
+  "endpoints": [
+    {
+      "endpoint": "/orders",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "host": [
+            "gcppubsub://"
+          ],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "github.com/devopsfaith/krakend-pubsub/publisher": {
+              "topic_url": "projects/ada2020-305519/topics/order_req"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/orders",
+      "method": "GET",
+      "output_encoding": "json",
+      "timeout": "20000ms",
+      "backend": [
+        {
+          "host": [
+            "gcppubsub://"
+          ],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "github.com/devopsfaith/krakend-pubsub/subscriber": {
+              "subscription_url": "projects/ada2020-305519/subscriptions/order_status_user_sub"
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend/proxy": {
+          "static": {
+            "strategy": "incomplete",
+            "data": {
+              "message": "No order status not available yet. Try later"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
